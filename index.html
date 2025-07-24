@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Flask Mongo To-Do App</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 600px;
+      margin: 2rem auto;
+      background-color: #f8f8f8;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    form {
+      margin-bottom: 1.5rem;
+      display: flex;
+      gap: 10px;
+    }
+
+    input[type="text"] {
+      flex-grow: 1;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      padding: 0.5rem 1rem;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      background-color: white;
+      border: 1px solid #ddd;
+      padding: 0.75rem;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .done-text {
+      text-decoration: line-through;
+      color: #777;
+    }
+
+    a {
+      color: red;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .status-button {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>📝 My To-Do List</h1>
+  <form action="/add" method="POST">
+    <input type="text" name="task" placeholder="New task..." required>
+    <button type="submit">Add</button>
+  </form>
+
+  <ul>
+    {% for todo in todos %}
+      <li>
+        <div class="left">
+          <form action="/toggle/{{ todo._id }}" method="get" style="margin: 0;">
+            <button type="submit" class="status-button">
+              {% if todo.done %}
+                ✅
+              {% else %}
+                ⬜
+              {% endif %}
+            </button>
+          </form>
+          <span class="{% if todo.done %}done-text{% endif %}">
+            {{ todo.task }}
+          </span>
+        </div>
+        <a href="/delete/{{ todo._id }}" onclick="return confirm('Delete this task?')">🗑</a>
+      </li>
+    {% endfor %}
+  </ul>
+</body>
+</html>
